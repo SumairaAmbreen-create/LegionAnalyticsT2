@@ -57,9 +57,10 @@ Follow these steps to launch the project on your local machine:
 6. Open the browser and navigate to http://localhost:8501 to view the dashboard.
 
 ## Dependencies:
-    The required libraries are listed in the requirements.txt file, and you can install them using: 
+    Run the Streamlit app:
     ```bash
-    pip install -r requirements.txt
+    streamlit run app.py
+
 
 ## Conclusion
 This project provides an interactive dashboard that allows users to explore vehicle listings data and gain insights into factors that affect vehicle prices. 
