@@ -2,6 +2,11 @@ import sys
 import subprocess
 import pkg_resources
 
+
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
 # Function to install packages if they're missing
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
@@ -24,9 +29,6 @@ for package, version in required.items():
         print(f"Version conflict for {package}. Installing version {version}...")
         install(package)
 
-import streamlit as st
-import pandas as pd
-import plotly.express as px
 
 # Load and prepare data
 df = pd.read_csv("vehicles_us.csv")
