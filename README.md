@@ -58,9 +58,9 @@ Follow these steps to launch the project on your local machine:
 
 
 ## Dependencies:
-The required libraries are listed in the requirements.txt file, and you can install them using: 
-    ```bash
-    pip install -r requirements.txt
+    The required libraries are listed in the requirements.txt file, and you can install them using: 
+        ```bash
+        pip install -r requirements.txt
 
 ## Conclusion
 This project provides an interactive dashboard that allows users to explore vehicle listings data and gain insights into factors that affect vehicle prices. 
