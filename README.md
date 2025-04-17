@@ -58,7 +58,7 @@ Follow these steps to launch the project on your local machine:
 
 
 ## Dependencies:
-    The required libraries are listed in the requirements.txt file, and you can install them using: 
+The required libraries are listed in the requirements.txt file, and you can install them using: 
         ```bash
         pip install -r requirements.txt
 
