@@ -37,9 +37,10 @@ Follow these steps to launch the project on your local machine:
 ### Installation Steps:
 
 1. Clone the repository:
-   ```bash
+
    git clone https://github.com/yourusername/LegionAnalyticsT2.git
    cd LegionAnalyticsT2
+
 2. Create a virtual environment (optional but recommended):
     python -m venv venv
 3. Activate the virtual environment:
