@@ -45,13 +45,16 @@ Follow these steps to launch the project on your local machine:
     ```bash
     python -m venv venv
 3. Activate the virtual environment:
+    ```bash
     venv\Scripts\activate (Windows)
     source venv/bin/activate (Mac/Linux)
 4. Install the required dependencies:
+    ```bash
     pip install -r requirements.txt
 5. Run the Streamlit app:
+    ```bash
     streamlit run app.py
-6. Open the browser and navigate to http://localhost:8501 to view the dashboard.
+6. Open the browser and navigate to ```bash http://localhost:8501 to view the dashboard.
 
 
 ## Dependencies:
