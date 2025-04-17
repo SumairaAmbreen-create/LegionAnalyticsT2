@@ -1,0 +1,90 @@
+import sys
+import subprocess
+import pkg_resources
+
+# Function to install packages if they're missing
+def install(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# List of required packages and versions
+required = {
+    'streamlit': '1.15.0',
+    'plotly': '5.0.0',
+    'pandas': '1.4.0'
+}
+
+# Check if required packages are installed with correct versions
+for package, version in required.items():
+    try:
+        pkg_resources.require(f"{package}=={version}")
+    except pkg_resources.DistributionNotFound:
+        print(f"Package {package} not found. Installing version {version}...")
+        install(package)
+    except pkg_resources.VersionConflict:
+        print(f"Version conflict for {package}. Installing version {version}...")
+        install(package)
+
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+# Load and prepare data
+df = pd.read_csv("vehicles_us.csv")
+df.columns = df.columns.str.strip().str.lower()
+df = df.dropna(subset=['model_year'])
+df['age'] = 2023 - df['model_year']
+
+# Sidebar controls
+st.sidebar.header("Filter the Data")
+
+# Vehicle type filter
+vehicle_types = df['type'].dropna().unique()
+selected_type = st.sidebar.selectbox("Select Vehicle Type", ["All"] + list(vehicle_types))
+if selected_type != "All":
+    df = df[df['type'] == selected_type]
+
+# Price slider
+min_price, max_price = int(df['price'].min()), int(df['price'].max())
+price_range = st.sidebar.slider("Select Price Range", min_price, max_price, (min_price, max_price))
+df = df[df['price'].between(*price_range)]
+
+# Year slider
+min_year, max_year = int(df['model_year'].min()), int(df['model_year'].max())
+year_range = st.sidebar.slider("Select Model Year Range", min_year, max_year, (min_year, max_year))
+df = df[df['model_year'].between(*year_range)]
+
+# App title
+st.header("🚘 Vehicle Listings Analysis Dashboard")
+
+# Show raw data
+if st.checkbox("Show Raw Data"):
+    st.subheader("Raw Data")
+    st.dataframe(df)
+
+# Histogram: Price Distribution
+if st.checkbox("Show Price Distribution Histogram", value=True):
+    fig = px.histogram(df, x="price", nbins=50, title="Distribution of Vehicle Prices")
+    st.plotly_chart(fig)
+
+# Scatter Plot: Age vs Price
+if st.checkbox("Show Age vs Price Scatter Plot", value=True):
+    fig = px.scatter(df, x="age", y="price", color='condition', title="Vehicle Age vs Price by Condition")
+    st.plotly_chart(fig)
+
+# Filtered scatter: Automatic transmission
+if st.checkbox("Show only Automatic vehicles"):
+    filtered_df = df[df['transmission'] == 'automatic']
+    fig_filtered = px.scatter(filtered_df, x="age", y="price", title="Automatic Vehicles: Age vs Price")
+    st.plotly_chart(fig_filtered)
+
+# Avg Price by Fuel Type
+if st.checkbox("Show Average Price by Fuel Type", value=True):
+    avg_price_fuel = df.groupby('fuel')['price'].mean().reset_index()
+    fig = px.bar(avg_price_fuel, x='fuel', y='price', title="Average Price by Fuel Type")
+    st.plotly_chart(fig)
+
+# Footer 
+st.markdown("---")
+st.markdown("<h6 style='text-align: center;'>Made this app with ❤️ using Streamlit and Plotly</h6>", unsafe_allow_html=True)
+
+

@@ -1,0 +1,18 @@
+# Handle line endings automatically
+* text=auto
+
+# Set specific behavior for common file types
+*.py text
+*.csv text
+*.ipynb text
+*.md text
+*.html text
+*.js text
+*.css text
+
+# Do not auto-normalize binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
