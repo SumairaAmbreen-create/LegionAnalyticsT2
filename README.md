@@ -57,9 +57,9 @@ Follow these steps to launch the project on your local machine:
 6. Open the browser and navigate to http://localhost:8501 to view the dashboard.
 
 ## Dependencies:
-    Run the Streamlit app:
+Run the Streamlit app:
     ```bash
-    streamlit run app.py
+   streamlit run app.py
 
 
 ## Conclusion
