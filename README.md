@@ -2,6 +2,8 @@
 
 # Vehicle Listings Analysis Dashboard
 
+This project provides an interactive dashboard that allows users to explore vehicle listings data and gain insights into factors that affect vehicle prices. 
+
 ## Project Description
 
 The **Vehicle Listings Analysis Dashboard** is a data visualization tool that allows users to explore and analyze vehicle listing data. It helps users understand key trends in vehicle listings, including factors such as price, age, and type of vehicles. The dashboard leverages interactive visualizations to filter and analyze data based on various parameters like price, model year, and vehicle type.
@@ -62,5 +64,3 @@ The required libraries are listed in the `requirements.txt` file. You can instal
 
 ```bash
 pip install -r requirements.txt
-
-
