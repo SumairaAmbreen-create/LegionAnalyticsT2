@@ -1,37 +1,41 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import os
 
-# Debug: show working directory and files
-st.write("📁 Current working directory:", os.getcwd())
-st.write("📂 Files in directory:", os.listdir())
+# Debug info
+st.write("📁 Current directory:", os.getcwd())
+st.write("📂 Directory contents:", os.listdir())
 
-# Set up CSV path
+# Path to CSV
 csv_path = os.path.join(os.path.dirname(__file__), "vehicles_us.csv")
 
-# Preview CSV content
+# Check file existence
 if not os.path.exists(csv_path):
-    st.error(f"❌ File not found at: {csv_path}")
+    st.error(f"❌ File not found: {csv_path}")
     st.stop()
-else:
-    try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
-            preview = f.read(300)
-            st.text_area("📄 CSV preview (first 300 characters)", preview)
 
-        # Use forgiving parser
-        df = pd.read_csv(csv_path, engine='python', encoding='utf-8', on_bad_lines='skip')
+# Show raw preview of file before parsing
+try:
+    with open(csv_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
 
-        if df.empty:
-            st.error("⚠️ CSV file loaded but it's empty. Please check the file.")
-            st.stop()
-        
-        st.success(f"✅ Loaded dataset with shape {df.shape}")
+    st.text_area("🧾 First 20 lines of CSV", "".join(lines[:20]), height=300)
+except Exception as e:
+    st.error(f"❌ Error reading file: {e}")
+    st.stop()
 
-    except Exception as e:
-        st.error(f"❌ Error loading CSV: {e}")
-        st.stop()
+# Try parsing with pandas
+try:
+    df = pd.read_csv(csv_path, engine='python', encoding='utf-8', on_bad_lines='skip')
+    st.success(f"✅ CSV loaded successfully with shape {df.shape}")
+except Exception as e:
+    st.error(f"❌ pandas.read_csv() failed: {e}")
+    st.stop()
+
+# Show column names
+st.subheader("🧠 Column Names")
+st.write(df.columns.tolist())
+
 
 # Preprocessing
 df.columns = df.columns.str.strip().str.lower()
