@@ -5,6 +5,9 @@ import os
 
 
 # Load and prepare data
+st.write("Current working directory:", os.getcwd())
+st.write("Files in current directory:", os.listdir())
+
 csv_path = os.path.join(os.path.dirname(__file__), "vehicles_us.csv")
 df = pd.read_csv(csv_path)
 
