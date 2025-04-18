@@ -8,7 +8,6 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 # Load and clean data
 try:
     df = pd.read_csv("vehicles_us1.csv", sep=",", encoding='utf-8')
-    st.success("CSV loaded successfully!")
     st.dataframe(df.head())
 
     # Standardize columns
