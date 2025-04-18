@@ -1,33 +1,6 @@
-import sys
-import subprocess
-import pkg_resources
-
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
-# Function to install packages if they're missing
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# List of required packages and versions
-required = {
-    'streamlit': '1.15.0',
-    'plotly': '5.0.0',
-    'pandas': '1.4.0'
-}
-
-# Check if required packages are installed with correct versions
-for package, version in required.items():
-    try:
-        pkg_resources.require(f"{package}=={version}")
-    except pkg_resources.DistributionNotFound:
-        print(f"Package {package} not found. Installing version {version}...")
-        install(package)
-    except pkg_resources.VersionConflict:
-        print(f"Version conflict for {package}. Installing version {version}...")
-        install(package)
 
 
 # Load and prepare data
