@@ -5,7 +5,7 @@ import plotly.express as px
 
 
 # Load and prepare data
-df = pd.read_csv("vehicles_us.csv")
+df = pd.read_csv("vehicles_us.csv", index=False)
 df.columns = df.columns.str.strip().str.lower()
 df = df.dropna(subset=['model_year'])
 df['age'] = 2023 - df['model_year']
