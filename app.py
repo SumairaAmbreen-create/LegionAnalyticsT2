@@ -1,32 +1,35 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import traceback
 
-uploaded_file = st.sidebar.file_uploader("Upload your vehicle CSV", type="csv")
+st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
-if uploaded_file:
-    df = pd.read_csv(uploaded_file)
-else:
+uploaded_file = st.file_uploader("Upload your vehicle CSV", type="csv")
+
+if uploaded_file is not None:
     try:
-        df = pd.read_csv("vehicles.csv")
+        df = pd.read_csv(uploaded_file)
 
         # Standardize columns
         df.columns = df.columns.str.strip().str.lower()
 
-        # Coerce numeric columns and clean them
+        # Convert and clean numeric columns
         df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
         df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
         df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
         df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
 
-        # Drop rows where essential fields are missing
+        # Drop missing essential fields
         df = df.dropna(subset=['model_year', 'price'])
 
-        # Convert types safely
+        # Type casting and new columns
         df['model_year'] = df['model_year'].astype(int)
         df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
         df['odometer'] = df['odometer'].fillna(0).astype(int)
         df['age'] = 2023 - df['model_year']
+
+        # Fill missing categoricals
         df['paint_color'] = df['paint_color'].fillna("unknown")
         df['condition'] = df['condition'].fillna("unknown")
         df['transmission'] = df['transmission'].fillna("unknown")
@@ -34,9 +37,12 @@ else:
         df['type'] = df['type'].fillna("unknown")
 
     except Exception as e:
-        st.error(f"❌ Failed to load CSV: {e}")
+        st.error(f"❌ Failed to process CSV: {e}")
+        st.text(traceback.format_exc())
         st.stop()
-
+else:
+    st.warning("Please upload a CSV file to get started.")
+    st.stop()
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter the Data")
