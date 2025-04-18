@@ -5,39 +5,27 @@ import plotly.express as px
 # Set page config
 st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
-# Load and clean data
+# Load data
 try:
-    df = pd.read_csv("vehicles_us.csv", sep=",", encoding='utf-8')
-    st.success("CSV loaded successfully!")
-    st.dataframe(df.head())
-
-    # Standardize columns
-    df.columns = df.columns.str.strip().str.lower()
-
-    # Coerce numeric columns and clean them
-    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
-    df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
-
-    # Drop rows where essential fields are missing
-    df = df.dropna(subset=['model_year', 'price'])
-
-    # Convert types safely
-    df['model_year'] = df['model_year'].astype(int)
-    df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
-    df['odometer'] = df['odometer'].fillna(0).astype(int)
-    df['age'] = 2023 - df['model_year']
-    df['paint_color'] = df['paint_color'].fillna("unknown")
-    df['condition'] = df['condition'].fillna("unknown")
-    df['transmission'] = df['transmission'].fillna("unknown")
-    df['fuel'] = df['fuel'].fillna("unknown")
-    df['type'] = df['type'].fillna("unknown")
-
+    df = pd.read_csv("vehicles_us.csv")  # Make sure this filename matches your actual file!
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
 
+# Clean column names
+df.columns = df.columns.str.strip().str.lower()
+
+# Handle data types and fill missing values
+df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+df['model_year'] = df['model_year'].fillna(0).astype(int)
+df['age'] = 2023 - df['model_year']
+df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce').fillna(0)
+df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce').fillna(0).astype(int)
+df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce').fillna(0).astype(int)
+
+# Fill categorical NaNs
+for col in ['condition', 'transmission', 'fuel', 'paint_color', 'type']:
+    df[col] = df[col].fillna("unknown")
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter the Data")
