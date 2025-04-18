@@ -19,12 +19,21 @@ if uploaded_file is not None:
         df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
         df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
         df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
+        df['price'] = pd.to_numeric(df['price'], errors='coerce')  # <-- make sure this is here
+
+        # ✅ ADD THIS CHECK RIGHT HERE:
+        if df['price'].isnull().all():
+            st.error("❌ The 'price' column is completely invalid or missing. Please check your CSV.")
+            st.stop()
 
         # Drop missing essential fields
         df = df.dropna(subset=['model_year', 'price'])
 
         # Type casting and new columns
         df['model_year'] = df['model_year'].astype(int)
+        if df['model_year'].isnull().all():
+            st.error("❌ The 'model_year' column is completely invalid or missing. Please check your CSV.")
+            st.stop()
         df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
         df['odometer'] = df['odometer'].fillna(0).astype(int)
         df['age'] = 2023 - df['model_year']
