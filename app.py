@@ -7,11 +7,11 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
 # Load and clean data
 try:
-    df = pd.read_csv("vehicles_us.csv")  # your original file
-    df.to_csv("vehicles_us_clean.csv", index=False)  # saves a clean version
+    df = pd.read_csv("vehicles_us_clean.csv")
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
+
 
 # Standardize column names
 df.columns = df.columns.str.strip().str.lower()
