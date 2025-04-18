@@ -1,41 +1,16 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import os
 
-# Load and inspect file
-st.write("📁 Current directory:", os.getcwd())
-st.write("📂 Files:", os.listdir())
 
-csv_path = os.path.join(os.path.dirname(__file__), "vehicles_us.csv")
 
-if not os.path.exists(csv_path):
-    st.error(f"❌ File not found at path: {csv_path}")
-    st.stop()
-
-# Show preview of raw CSV content
-try:
-    with open(csv_path, 'r', encoding='utf-8') as f:
-        content = f.read(500)
-        st.text_area("🧾 CSV Preview (first 500 chars)", content)
-except Exception as e:
-    st.error(f"❌ Failed reading file: {e}")
-    st.stop()
-
-# Read CSV with pandas, skipping bad lines
-try:
-    df = pd.read_csv(csv_path, encoding='utf-8', on_bad_lines='skip')
-    st.success(f"✅ Loaded CSV with shape: {df.shape}")
-except Exception as e:
-    st.error(f"❌ Failed to load CSV: {e}")
-    st.stop()
-
-# Clean and transform
+# Load and prepare data
+df = pd.read_csv("vehicles_us.csv")
 df.columns = df.columns.str.strip().str.lower()
 df = df.dropna(subset=['model_year'])
 df['age'] = 2023 - df['model_year']
 
-# Sidebar filters
+# Sidebar controls
 st.sidebar.header("Filter the Data")
 
 # Vehicle type filter
@@ -62,28 +37,30 @@ if st.checkbox("Show Raw Data"):
     st.subheader("Raw Data")
     st.dataframe(df)
 
-# Price Distribution
+# Histogram: Price Distribution
 if st.checkbox("Show Price Distribution Histogram", value=True):
     fig = px.histogram(df, x="price", nbins=50, title="Distribution of Vehicle Prices")
     st.plotly_chart(fig)
 
-# Age vs Price
+# Scatter Plot: Age vs Price
 if st.checkbox("Show Age vs Price Scatter Plot", value=True):
     fig = px.scatter(df, x="age", y="price", color='condition', title="Vehicle Age vs Price by Condition")
     st.plotly_chart(fig)
 
-# Only Automatic vehicles
+# Filtered scatter: Automatic transmission
 if st.checkbox("Show only Automatic vehicles"):
     filtered_df = df[df['transmission'] == 'automatic']
     fig_filtered = px.scatter(filtered_df, x="age", y="price", title="Automatic Vehicles: Age vs Price")
     st.plotly_chart(fig_filtered)
 
-# Average price by fuel
+# Avg Price by Fuel Type
 if st.checkbox("Show Average Price by Fuel Type", value=True):
     avg_price_fuel = df.groupby('fuel')['price'].mean().reset_index()
     fig = px.bar(avg_price_fuel, x='fuel', y='price', title="Average Price by Fuel Type")
     st.plotly_chart(fig)
 
-# Footer
+# Footer 
 st.markdown("---")
-st.markdown("<h6 style='text-align: center;'>Made with ❤️ using Streamlit + Plotly</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center;'>Made this app with ❤️ using Streamlit and Plotly</h6>", unsafe_allow_html=True)
+
+
