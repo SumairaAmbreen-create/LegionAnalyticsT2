@@ -7,7 +7,7 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
 # Load and clean data
 try:
-    df.to_csv("vehicles_us_clean.csv")
+    df = pd.read_csv("vehicles_us.csv")
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
@@ -26,6 +26,7 @@ df['is_4wd'] = df['is_4wd'].fillna(0)
 df['paint_color'] = df['paint_color'].fillna("unknown")
 df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
 df['odometer'] = df['odometer'].fillna(0)
+
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter the Data")
