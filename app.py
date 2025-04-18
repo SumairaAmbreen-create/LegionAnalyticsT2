@@ -15,6 +15,10 @@ if not os.path.exists(csv_path):
     st.error(f"File not found at path: {csv_path}")
 else:
     try:
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            content = f.read(300)  # just the first few hundred characters
+            st.text_area("📄 vehicles_us.csv preview (first 300 chars)", content)
+
         df = pd.read_csv(csv_path)
         st.success(f"Loaded CSV with shape {df.shape}")
     except Exception as e:
