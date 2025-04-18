@@ -9,7 +9,16 @@ st.write("Current working directory:", os.getcwd())
 st.write("Files in current directory:", os.listdir())
 
 csv_path = os.path.join(os.path.dirname(__file__), "vehicles_us.csv")
-df = pd.read_csv(csv_path)
+
+
+if not os.path.exists(csv_path):
+    st.error(f"File not found at path: {csv_path}")
+else:
+    try:
+        df = pd.read_csv(csv_path)
+        st.success(f"Loaded CSV with shape {df.shape}")
+    except Exception as e:
+        st.error(f"Error loading CSV: {e}")
 
 df.columns = df.columns.str.strip().str.lower()
 df = df.dropna(subset=['model_year'])
