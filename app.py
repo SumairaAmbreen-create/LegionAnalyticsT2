@@ -7,7 +7,7 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
 # Load and clean data
 try:
-    df = pd.read_csv("vehicles.csv", encoding='utf-8')
+    df = pd.read_excel("vehicles_us.csv", encoding='utf-8')
 
     # Standardize columns
     df.columns = df.columns.str.strip().str.lower()
