@@ -7,7 +7,7 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
 # Load and clean data
 try:
-    df = pd.read_csv("vehicles_us.csv")
+    df = pd.read_csv("vehicles_us.csv") 
 except Exception as e:
     st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
