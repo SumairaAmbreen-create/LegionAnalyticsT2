@@ -1,10 +1,13 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import os
 
 
 # Load and prepare data
-df = pd.read_csv("vehicles_us.csv")
+csv_path = os.path.join(os.path.dirname(__file__), "vehicles_us.csv")
+df = pd.read_csv(csv_path)
+
 df.columns = df.columns.str.strip().str.lower()
 df = df.dropna(subset=['model_year'])
 df['age'] = 2023 - df['model_year']
