@@ -2,39 +2,40 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Set page config
-st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
+uploaded_file = st.sidebar.file_uploader("Upload your vehicle CSV", type="csv")
 
-# Load and clean data
-try:
-    df = pd.read_csv("vehicles.csv")
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+else:
+    try:
+        df = pd.read_csv("vehicles.csv")
 
-    # Standardize columns
-    df.columns = df.columns.str.strip().str.lower()
+        # Standardize columns
+        df.columns = df.columns.str.strip().str.lower()
 
-    # Coerce numeric columns and clean them
-    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
-    df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
+        # Coerce numeric columns and clean them
+        df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+        df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
+        df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+        df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
 
-    # Drop rows where essential fields are missing
-    df = df.dropna(subset=['model_year', 'price'])
+        # Drop rows where essential fields are missing
+        df = df.dropna(subset=['model_year', 'price'])
 
-    # Convert types safely
-    df['model_year'] = df['model_year'].astype(int)
-    df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
-    df['odometer'] = df['odometer'].fillna(0).astype(int)
-    df['age'] = 2023 - df['model_year']
-    df['paint_color'] = df['paint_color'].fillna("unknown")
-    df['condition'] = df['condition'].fillna("unknown")
-    df['transmission'] = df['transmission'].fillna("unknown")
-    df['fuel'] = df['fuel'].fillna("unknown")
-    df['type'] = df['type'].fillna("unknown")
+        # Convert types safely
+        df['model_year'] = df['model_year'].astype(int)
+        df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
+        df['odometer'] = df['odometer'].fillna(0).astype(int)
+        df['age'] = 2023 - df['model_year']
+        df['paint_color'] = df['paint_color'].fillna("unknown")
+        df['condition'] = df['condition'].fillna("unknown")
+        df['transmission'] = df['transmission'].fillna("unknown")
+        df['fuel'] = df['fuel'].fillna("unknown")
+        df['type'] = df['type'].fillna("unknown")
 
-except Exception as e:
-    st.error(f"❌ Failed to load CSV: {e}")
-    st.stop()
+    except Exception as e:
+        st.error(f"❌ Failed to load CSV: {e}")
+        st.stop()
 
 
 # Sidebar filters
