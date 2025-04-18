@@ -9,7 +9,7 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 try:
     df = pd.read_csv("vehicles_us.csv")
 
-    # Standardize column names
+    # Standardize columns
     df.columns = df.columns.str.strip().str.lower()
 
     # Coerce numeric columns and clean them
