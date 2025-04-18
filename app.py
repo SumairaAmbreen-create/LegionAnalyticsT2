@@ -1,57 +1,41 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import traceback
 
+# Set page config
 st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
-uploaded_file = st.file_uploader("Upload your vehicle CSV", type="csv")
+# Load and clean data
+try:
+    df = pd.read_csv("vehicles.csv", encoding='utf-8')
 
-if uploaded_file is not None:
-    try:
-        df = pd.read_csv(uploaded_file)
+    # Standardize columns
+    df.columns = df.columns.str.strip().str.lower()
 
-        # Standardize columns
-        df.columns = df.columns.str.strip().str.lower()
+    # Coerce numeric columns and clean them
+    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
+    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
+    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
+    df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
 
-        # Convert and clean numeric columns
-        df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-        df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-        df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
-        df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
-        df['price'] = pd.to_numeric(df['price'], errors='coerce')  # <-- make sure this is here
+    # Drop rows where essential fields are missing
+    df = df.dropna(subset=['model_year', 'price'])
 
-        # ✅ ADD THIS CHECK RIGHT HERE:
-        if df['price'].isnull().all():
-            st.error("❌ The 'price' column is completely invalid or missing. Please check your CSV.")
-            st.stop()
+    # Convert types safely
+    df['model_year'] = df['model_year'].astype(int)
+    df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
+    df['odometer'] = df['odometer'].fillna(0).astype(int)
+    df['age'] = 2023 - df['model_year']
+    df['paint_color'] = df['paint_color'].fillna("unknown")
+    df['condition'] = df['condition'].fillna("unknown")
+    df['transmission'] = df['transmission'].fillna("unknown")
+    df['fuel'] = df['fuel'].fillna("unknown")
+    df['type'] = df['type'].fillna("unknown")
 
-        # Drop missing essential fields
-        df = df.dropna(subset=['model_year', 'price'])
-
-        # Type casting and new columns
-        df['model_year'] = df['model_year'].astype(int)
-        if df['model_year'].isnull().all():
-            st.error("❌ The 'model_year' column is completely invalid or missing. Please check your CSV.")
-            st.stop()
-        df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
-        df['odometer'] = df['odometer'].fillna(0).astype(int)
-        df['age'] = 2023 - df['model_year']
-
-        # Fill missing categoricals
-        df['paint_color'] = df['paint_color'].fillna("unknown")
-        df['condition'] = df['condition'].fillna("unknown")
-        df['transmission'] = df['transmission'].fillna("unknown")
-        df['fuel'] = df['fuel'].fillna("unknown")
-        df['type'] = df['type'].fillna("unknown")
-
-    except Exception as e:
-        st.error(f"❌ Failed to process CSV: {e}")
-        st.text(traceback.format_exc())
-        st.stop()
-else:
-    st.warning("Please upload a CSV file to get started.")
+except Exception as e:
+    st.error(f"❌ Failed to load CSV: {e}")
     st.stop()
+
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter the Data")
