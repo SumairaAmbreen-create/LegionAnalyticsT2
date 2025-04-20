@@ -2,7 +2,7 @@
 
 ## Vehicle Listings Analysis Dashboard
 
-This project presents a powerful and interactive dashboard designed to analyze vehicle listings data. By visualizing trends and patterns, users can explore how various attributes—such as vehicle age, condition, fuel type, and model year—impact listing prices. The dashboard is built using **Streamlit** and **Plotly** to provide a responsive and intuitive interface.
+This project presents a powerful and interactive dashboard designed to analyze vehicle listings data. By visualizing trends and patterns, users can explore how various attributes such as vehicle age, condition, fuel type, and model year—impact listing prices. The dashboard is built using **Streamlit** and **Plotly** to provide a responsive and intuitive interface.
 
 ---
 
