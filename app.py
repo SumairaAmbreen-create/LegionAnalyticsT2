@@ -1,14 +1,20 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import os
 # Set page config
 st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
 # Load cleaned data
 try:
-    df = pd.read_csv("vehicles_cleaned.csv", encoding='utf-8')
-    st.dataframe(df.head())
+    csv_file_path = "vehicles_cleaned.csv"
+
+    # Check if the file exists before reading
+    if os.path.exists(csv_file_path):
+        df = pd.read_csv(csv_file_path, encoding='utf-8')
+        print("CSV file loaded successfully.")
+    else:
+        print(f"Error: The file {csv_file_path} does not exist.")
 
 except Exception as e:
     st.error(f"Failed to load cleaned CSV: {e}")
