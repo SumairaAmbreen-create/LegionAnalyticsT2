@@ -154,8 +154,6 @@ cython_debug/
 # Streamlit cache and config
 .streamlit/
 
-# Cleaned data artifacts
-vehicles_cleaned.csv
 
 # Notebook outputs
 *.out.ipynb
