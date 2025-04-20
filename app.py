@@ -5,38 +5,14 @@ import plotly.express as px
 # Set page config
 st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 
-# Load and clean data
+# Load cleaned data
 try:
-    df = pd.read_csv("vehicles_us1.csv", sep=",", encoding='utf-8')
+    df = pd.read_csv("vehicles_cleaned.csv", encoding='utf-8')
     st.dataframe(df.head())
 
-    # Standardize columns
-    df.columns = df.columns.str.strip().str.lower()
-
-    # Coerce numeric columns and clean them
-    df['model_year'] = pd.to_numeric(df['model_year'], errors='coerce')
-    df['cylinders'] = pd.to_numeric(df['cylinders'], errors='coerce')
-    df['odometer'] = pd.to_numeric(df['odometer'], errors='coerce')
-    df['is_4wd'] = pd.to_numeric(df['is_4wd'], errors='coerce')
-
-    # Drop rows where essential fields are missing
-    df = df.dropna(subset=['model_year', 'price'])
-
-    # Convert types safely
-    df['model_year'] = df['model_year'].astype(int)
-    df['is_4wd'] = df['is_4wd'].fillna(0).astype(int)
-    df['odometer'] = df['odometer'].fillna(0).astype(int)
-    df['age'] = 2023 - df['model_year']
-    df['paint_color'] = df['paint_color'].fillna("unknown")
-    df['condition'] = df['condition'].fillna("unknown")
-    df['transmission'] = df['transmission'].fillna("unknown")
-    df['fuel'] = df['fuel'].fillna("unknown")
-    df['type'] = df['type'].fillna("unknown")
-
 except Exception as e:
-    st.error(f"Failed to load CSV: {e}")
+    st.error(f"Failed to load cleaned CSV: {e}")
     st.stop()
-
 
 # Sidebar filters
 st.sidebar.header("🔍 Filter the Data")
@@ -81,10 +57,25 @@ if st.checkbox("Show only Automatic vehicles"):
     fig_filtered = px.scatter(filtered_df, x="age", y="price", title="Automatic Vehicles: Age vs Price")
     st.plotly_chart(fig_filtered)
 
-# Avg Price by Fuel Type
-if st.checkbox("Show Average Price by Fuel Type", value=True):
-    avg_price_fuel = df.groupby('fuel')['price'].mean().reset_index()
-    fig = px.bar(avg_price_fuel, x='fuel', y='price', title="Average Price by Fuel Type")
+# Median Price by Fuel Type
+if st.checkbox("Show Median Price by Fuel Type", value=True):
+    median_price_fuel = df.groupby('fuel')['price'].median().reset_index()
+    fig = px.bar(median_price_fuel, x='fuel', y='price', title="Median Price by Fuel Type")
+    st.plotly_chart(fig)
+
+# Median Price by Condition
+if st.checkbox("Show Median Price by Condition", value=True):
+    median_price_condition = df.groupby('condition')['price'].median().reset_index()
+    fig = px.bar(median_price_condition, x='condition', y='price', title="Median Price by Condition")
+    st.plotly_chart(fig)
+
+# Median Price by Top 20 Models
+if st.checkbox("Show Median Price by Top 20 Models", value=True):
+    n = 20
+    top_models = df['model'].value_counts().head(n).index
+    top_df = df[df['model'].isin(top_models)]
+    median_price_by_model = top_df.groupby('model')['price'].median().reset_index()
+    fig = px.bar(median_price_by_model, x='model', y='price', title=f"Median Price (Top {n} Models)")
     st.plotly_chart(fig)
 
 # Footer
