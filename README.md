@@ -66,9 +66,10 @@ Follow these steps to launch the project on your local machine:
     ```bash
     python -m venv venv
 3. Activate the virtual environment:
-    ```bash
-    venv\Scripts\activate (Windows)
-    source venv/bin/activate (Mac/Linux)
+    Window ```bash
+    venv\Scripts\activate
+     (Mac/Linux) ```bash
+    source venv/bin/activate
 4. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
