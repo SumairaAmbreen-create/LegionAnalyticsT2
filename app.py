@@ -8,7 +8,8 @@ st.set_page_config(page_title="Vehicle Listings Dashboard", layout="wide")
 # Load cleaned data
 try:
     # df = pd.read_csv("vehicles_cleaned.csv", encoding='utf-8')
-    df = pd.read_csv("vehicles_cleaned.csv", encoding='utf-8', errors='ignore')
+    df = pd.read_csv("vehicles_cleaned.csv", encoding='ISO-8859-1')
+
     st.dataframe(df.head())
 
 except Exception as e:
