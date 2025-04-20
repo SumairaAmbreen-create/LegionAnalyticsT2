@@ -13,7 +13,6 @@ try:
         # Force clean + flatten structure
         df = df.copy(deep=True)
         df.to_csv("vehicles_cleaned.csv", index=False)
-        print("CSV file loaded successfully.")
 
 except Exception as e:
     st.error(f"Failed to load cleaned CSV: {e}")
